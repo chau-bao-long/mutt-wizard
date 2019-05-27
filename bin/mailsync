@@ -5,7 +5,7 @@
 pgrep -u "$USER" >/dev/null || exit
 
 # Checks for internet connection and set notification script.
-ping -q -c 1 1.1.1.1 > /dev/null || exit
+/sbin/ping -q -c 1 1.1.1.1 > /dev/null || exit
 command -v notify-send >/dev/null || echo "Note that \`libnotify\` or \`libnotify-send\` should be installed for pop-up mail notifications with this script."
 
 export DISPLAY=:0.0
@@ -22,9 +22,9 @@ pkill -RTMIN+12 i3blocks >/dev/null 2>&1
 
 # Run mbsync. You can feed this script different settings.
 if [ $# -eq 0 ]; then
-	mbsync -a
+	/usr/local/bin/mbsync -a
 else
-	mbsync "$@"
+	/usr/local/bin/mbsync "$@"
 fi
 
 rm -f /tmp/imapsyncicon_$USER
@@ -37,7 +37,7 @@ do
 	newcount=$(find "$HOME/.local/share/mail/$acc/INBOX/new/" "$HOME/.local/share/mail/$acc/Inbox/new/" "$HOME/.local/share/mail/$acc/inbox/new/" -type f -newer "$HOME/.config/mutt/.mailsynclastrun" 2> /dev/null | wc -l)
 	[ "$newcount" -gt "0" ] && notify "$acc" "$newcount" &
 done
-notmuch new 2>/dev/null
+/usr/local/bin/notmuch new 2>/dev/null
 
 #Create a touch file that indicates the time of the last run of mailsync
-touch "$HOME/.config/mutt/.mailsynclastrun"
+/usr/bin/touch "$HOME/.config/mutt/.mailsynclastrun"
